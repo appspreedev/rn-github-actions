@@ -5,6 +5,8 @@ package = load_json(json_path: "./package.json")
 platform :ios do
   desc "Build app"
   lane :build do |options|
+    setup_ci
+    
     # download signing files
     match(type: "appstore", api_key_path: "./fastlane/appstore_key.json")
 
