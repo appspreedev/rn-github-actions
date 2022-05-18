@@ -82,6 +82,12 @@ jobs:
           RELEASE_KEYSTORE_PASSPHRASE: ${{ secrets.RELEASE_KEYSTORE_PASSPHRASE }}
 #          SERVICE_ACCOUNT: ${{ secrets.SERVICE_ACCOUNT }}
 #          SERVICE_ACCOUNT_PASSPHRASE: ${{ secrets.SERVICE_ACCOUNT_PASSPHRASE }}
+        
+      - uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          name: release.keystore.asc
+          path: release.keystore.asc
 
       - name: Node modules cache
         uses: actions/cache@v2
