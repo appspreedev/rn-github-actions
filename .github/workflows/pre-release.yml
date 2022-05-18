@@ -40,7 +40,7 @@ jobs:
           bundle config path vendor/bundle
           bundle check || bundle install
 
-      - name: Fastlane
+      - name: Build & Deploy
         run: bundle exec fastlane ios build
         env:
           FASTLANE_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
@@ -62,11 +62,6 @@ jobs:
 #          SERVICE_ACCOUNT: ${{ secrets.SERVICE_ACCOUNT }}
 #          SERVICE_ACCOUNT_PASSPHRASE: ${{ secrets.SERVICE_ACCOUNT_PASSPHRASE }}
 
-#      - uses: AdoptOpenJDK/install-jdk@v1
-#        with:
-#          version: '11'
-#          architecture: x64
-
       - name: Node modules cache
         uses: actions/cache@v2
         with:
@@ -83,19 +78,15 @@ jobs:
         with:
           node-version: '16'
 
-#      - name: Install yarn
-#        run: npm install -g yarn
-
       - name: Install dependencies
         run: yarn
 
       - name: Install Fastlane
         run: gem install fastlane
 
-#      - name: Bundle install
-#        run: |
-#          bundle config path vendor/bundle
-#          bundle check || bundle install
-
-      - name: Fastlane
-        run: fastlane android build RELEASE_KEYSTORE_PASSWORD:${{secrets.RELEASE_KEYSTORE_PASSWORD}} RELEASE_KEYSTORE_KEY_PASSWORD:${{secrets.RELEASE_KEYSTORE_PASSWORD}} RELEASE_KEYSTORE_ALIAS:${{secrets.RELEASE_KEYSTORE_ALIAS}}
+      - name: Build & Deploy
+        run: fastlane android build
+        env:
+          RELEASE_KEYSTORE_PASSWORD: ${{secrets.RELEASE_KEYSTORE_PASSWORD}}
+          RELEASE_KEYSTORE_KEY_PASSWORD: ${{secrets.RELEASE_KEYSTORE_PASSWORD}}
+          RELEASE_KEYSTORE_ALIAS: ${{secrets.RELEASE_KEYSTORE_ALIAS}}
