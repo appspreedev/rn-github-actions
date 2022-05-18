@@ -6,7 +6,7 @@ platform :ios do
   desc "Build app"
   lane :build do |options|
     # download signing files
-    match(type: "appstore")
+    match(type: "appstore", api_key_path: "./fastlane/appstore_key.json")
 
     # build the app
     build_app(

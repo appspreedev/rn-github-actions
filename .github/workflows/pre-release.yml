@@ -13,6 +13,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: Decrypt ios keys
+        run: sh ./.github/scripts/decrypt_ios_keys.sh
+        env:
+          APPSTORE_API_KEY: ${{ secrets.APPSTORE_API_KEY }}
+          APPSTORE_API_KEY_PASSPHRASE: ${{ secrets.APPSTORE_API_KEY_PASSPHRASE }}
+
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: '2.7.4'
@@ -45,7 +51,7 @@ jobs:
         env:
           FASTLANE_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
-          FASTLANE_AUTHORIZATION: ${{ secrets.FASTLANE_AUTHORIZATION }}
+          MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }}
 
   ANDROID_BUILD:
     name: "Android Build & Deploy"
