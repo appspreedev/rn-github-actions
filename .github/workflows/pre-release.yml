@@ -46,6 +46,20 @@ jobs:
           bundle config path vendor/bundle
           bundle check || bundle install
 
+      - name: Restore Pods cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            ios/Pods
+            ~/Library/Caches/CocoaPods
+            ~/.cocoapods
+          key: ${{ runner.os }}-pods-${{ hashFiles('ios/Podfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-pods-
+
+      - name: Install Pods
+        run: cd ios && pod install --repo-update && cd ..
+
       - name: Build & Deploy
         run: bundle exec fastlane ios build
         env:
@@ -91,8 +105,13 @@ jobs:
       - name: Install Fastlane
         run: gem install fastlane
 
+      - name: Bundle install
+        run: |
+          bundle config path vendor/bundle
+          bundle check || bundle install
+
       - name: Build & Deploy
-        run: fastlane android build
+        run: bundle exec fastlane android build
         env:
           RELEASE_KEYSTORE_PASSWORD: ${{secrets.RELEASE_KEYSTORE_PASSWORD}}
           RELEASE_KEYSTORE_KEY_PASSWORD: ${{secrets.RELEASE_KEYSTORE_PASSWORD}}
