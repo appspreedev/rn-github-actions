@@ -45,6 +45,7 @@ jobs:
         env:
           FASTLANE_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+          FASTLANE_AUTHORIZATION: ${{ secrets.FASTLANE_AUTHORIZATION }}
 
   ANDROID_BUILD:
     name: "Android Build & Deploy"
