@@ -1,0 +1,69 @@
+update_fastlane
+
+package = load_json(json_path: "./package.json")
+
+platform :ios do
+  desc "Build app"
+  lane :build do |options|
+    # download signing files
+    match(type: "appstore")
+
+    # build the app
+    build_app(
+      workspace: "./ios/RNGithubActions.xcworkspace",
+      configuration: "Release",
+      clean: true,
+      output_directory: "./dist",
+      output_name: "rngithubactions.ipa",
+    )
+  end
+
+  desc "Push a new beta build to TestFlight"
+  lane :pre_release do
+    increment_build_number(xcodeproj: "RNGithubActions.xcodeproj")
+    build
+    upload_to_testflight
+  end
+
+  desc "Publish App"
+  lane :publish do
+    deliver(
+      build_number: ENV["VERSION"],
+      submit_for_review: true,
+      automatic_release: false,
+      force: true, # Skip HTMl report verification
+      skip_metadata: true,
+      skip_screenshots: true,
+      skip_binary_upload: true
+    )
+  end
+end
+
+platform :android do
+  desc "Build app"
+  lane :build do |options|
+    gradle(
+        task: 'bundle',
+        build_type: 'Release',
+        properties: {
+         "android.injected.signing.store.file" => Dir.pwd + "/release.keystore",
+         "android.injected.signing.store.password" => options[:RELEASE_KEYSTORE_PASSWORD], # keystore password
+         "android.injected.signing.key.alias" => options[:RELEASE_KEYSTORE_ALIAS], # alias
+         "android.injected.signing.key.password" => options[:RELEASE_KEYSTORE_KEY_PASSWORD], # key password
+         "vname" => package["version"]
+        },
+        project_dir: './android'
+    )
+  end
+
+desc "Release App"
+  lane :pre_release do |options|
+    build
+    upload_play_internal
+  end
+
+  desc "Publish App"
+  lane :publish do
+    promote_play_prod
+  end
+end
