@@ -19,11 +19,6 @@ jobs:
           APPSTORE_API_KEY: ${{ secrets.APPSTORE_API_KEY }}
           SECRETS_PASSPHRASE: ${{ secrets.SECRETS_PASSPHRASE }}
 
-      - name: Setup .npmrc
-        run: sh ./.github/scripts/setup-npmrc.sh
-        env:
-          NPM_READ_TOKEN: ${{ secrets.NPM_READ_TOKEN }}
-
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: '2.7.4'
@@ -84,13 +79,9 @@ jobs:
         run: sh ./.github/scripts/decrypt_android_keys.sh
         env:
           RELEASE_KEYSTORE: ${{ secrets.RELEASE_KEYSTORE }}
+          RELEASE_KEYSTORE_INFO: ${{ secrets.RELEASE_KEYSTORE_INFO }}
           SECRETS_PASSPHRASE: ${{ secrets.SECRETS_PASSPHRASE }}
 #          SERVICE_ACCOUNT: ${{ secrets.SERVICE_ACCOUNT }}
-
-      - name: Setup .npmrc
-        run: sh ./.github/scripts/setup-npmrc.sh
-        env:
-          NPM_READ_TOKEN: ${{ secrets.NPM_READ_TOKEN }}
 
       - uses: actions/upload-artifact@v2
         if: failure()
