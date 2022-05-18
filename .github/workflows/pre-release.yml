@@ -17,7 +17,12 @@ jobs:
         run: sh ./.github/scripts/decrypt_ios_keys.sh
         env:
           APPSTORE_API_KEY: ${{ secrets.APPSTORE_API_KEY }}
-          APPSTORE_API_KEY_PASSPHRASE: ${{ secrets.APPSTORE_API_KEY_PASSPHRASE }}
+          SECRETS_PASSPHRASE: ${{ secrets.SECRETS_PASSPHRASE }}
+
+      - name: Setup .npmrc
+        run: sh ./.github/scripts/setup-npmrc.sh
+        env:
+          NPM_READ_TOKEN: ${{ secrets.NPM_READ_TOKEN }}
 
       - uses: ruby/setup-ruby@v1
         with:
@@ -79,9 +84,13 @@ jobs:
         run: sh ./.github/scripts/decrypt_android_keys.sh
         env:
           RELEASE_KEYSTORE: ${{ secrets.RELEASE_KEYSTORE }}
-          RELEASE_KEYSTORE_PASSPHRASE: ${{ secrets.RELEASE_KEYSTORE_PASSPHRASE }}
+          SECRETS_PASSPHRASE: ${{ secrets.SECRETS_PASSPHRASE }}
 #          SERVICE_ACCOUNT: ${{ secrets.SERVICE_ACCOUNT }}
-#          SERVICE_ACCOUNT_PASSPHRASE: ${{ secrets.SERVICE_ACCOUNT_PASSPHRASE }}
+
+      - name: Setup .npmrc
+        run: sh ./.github/scripts/setup-npmrc.sh
+        env:
+          NPM_READ_TOKEN: ${{ secrets.NPM_READ_TOKEN }}
 
       - uses: actions/upload-artifact@v2
         if: failure()
