@@ -1,7 +1,7 @@
 update_fastlane
 
 package = load_json(json_path: "./package.json")
-keystore_json = read_json(json_path: "./fastlane/keystore-info.json")
+keystore_json = load_json(json_path: "./fastlane/keystore-info.json")
 
 platform :ios do
   desc "Build app"
