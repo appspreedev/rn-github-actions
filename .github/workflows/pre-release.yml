@@ -61,7 +61,7 @@ jobs:
         run: cd ios && pod install --repo-update && cd ..
 
       - name: Build & Deploy
-        run: bundle exec fastlane ios build
+        run: bundle exec fastlane ios pre_release
         env:
           FASTLANE_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
@@ -82,7 +82,7 @@ jobs:
           RELEASE_KEYSTORE_PASSPHRASE: ${{ secrets.RELEASE_KEYSTORE_PASSPHRASE }}
 #          SERVICE_ACCOUNT: ${{ secrets.SERVICE_ACCOUNT }}
 #          SERVICE_ACCOUNT_PASSPHRASE: ${{ secrets.SERVICE_ACCOUNT_PASSPHRASE }}
-        
+
       - uses: actions/upload-artifact@v2
         if: failure()
         with:
@@ -117,8 +117,4 @@ jobs:
           bundle check || bundle install
 
       - name: Build & Deploy
-        run: bundle exec fastlane android build
-        env:
-          RELEASE_KEYSTORE_PASSWORD: ${{secrets.RELEASE_KEYSTORE_PASSWORD}}
-          RELEASE_KEYSTORE_KEY_PASSWORD: ${{secrets.RELEASE_KEYSTORE_PASSWORD}}
-          RELEASE_KEYSTORE_ALIAS: ${{secrets.RELEASE_KEYSTORE_ALIAS}}
+        run: bundle exec fastlane android pre_release

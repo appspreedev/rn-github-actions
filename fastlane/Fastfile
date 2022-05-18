@@ -1,12 +1,11 @@
 update_fastlane
 
 package = load_json(json_path: "./package.json")
+keystore_json = read_json(json_path: "./fastlane/keystore-info.json")
 
 platform :ios do
   desc "Build app"
   lane :build do |options|
-    setup_ci
-    
     # download signing files
     match(type: "appstore", api_key_path: "./fastlane/appstore_key.json")
 
@@ -22,9 +21,13 @@ platform :ios do
 
   desc "Push a new beta build to TestFlight"
   lane :pre_release do
+    if is_ci
+     setup_ci
+    end
+
     increment_build_number(xcodeproj: "RNGithubActions.xcodeproj")
     build
-    upload_to_testflight
+#     upload_to_testflight
   end
 
   desc "Publish App"
@@ -43,15 +46,15 @@ end
 
 platform :android do
   desc "Build app"
-  lane :build do |options|
+  lane :build do
     gradle(
         task: 'bundle',
         build_type: 'Release',
         properties: {
          "android.injected.signing.store.file" => Dir.pwd + "/release.keystore",
-         "android.injected.signing.store.password" => ENV["RELEASE_KEYSTORE_PASSWORD"],
-         "android.injected.signing.key.alias" => ENV["RELEASE_KEYSTORE_ALIAS"],
-         "android.injected.signing.key.password" => ENV["RELEASE_KEYSTORE_KEY_PASSWORD"],
+         "android.injected.signing.store.password" => keystore_json[:password],
+         "android.injected.signing.key.alias" => keystore_json[:alias],
+         "android.injected.signing.key.password" => keystore_json[:keyPassword],
          "vname" => package["version"]
         },
         project_dir: './android'
@@ -61,7 +64,7 @@ platform :android do
 desc "Release App"
   lane :pre_release do |options|
     build
-    upload_play_internal
+#     upload_play_internal
   end
 
   desc "Publish App"
