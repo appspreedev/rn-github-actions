@@ -1,7 +1,7 @@
 echo "$RELEASE_KEYSTORE" > release.keystore.asc
 gpg -d --passphrase="$SECRETS_PASSPHRASE" --batch release.keystore.asc > fastlane/release.keystore
 
-echo "$RELEASE_KEYSTORE_INFO" > keystore-info.asc
+echo "$RELEASE_KEYSTORE_INFO" > keystore-info.json.asc
 gpg -d --passphrase="$SECRETS_PASSPHRASE" --batch keystore-info.json.asc > fastlane/keystore-info.json
 
 #echo "$SERVICE_ACCOUNT" > service_account.json.asc
@@ -9,4 +9,4 @@ gpg -d --passphrase="$SECRETS_PASSPHRASE" --batch keystore-info.json.asc > fastl
 
 #rm release.keystore.asc service_account.json.asc
 
-rm release.keystore.asc keystore-info.asc
+rm release.keystore.asc keystore-info.json.asc
