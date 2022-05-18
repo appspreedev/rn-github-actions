@@ -46,15 +46,14 @@ end
 platform :android do
   desc "Build app"
   lane :build do
-    keystore_json = load_json(json_path: "./fastlane/keystore-info.json")
     gradle(
         task: 'bundle',
         build_type: 'Release',
         properties: {
          "android.injected.signing.store.file" => Dir.pwd + "/release.keystore",
-         "android.injected.signing.store.password" => keystore_json[:password],
-         "android.injected.signing.key.alias" => keystore_json[:alias],
-         "android.injected.signing.key.password" => keystore_json[:keyPassword],
+         "android.injected.signing.store.password" => ENV["RELEASE_KEYSTORE_PASSWORD"],
+         "android.injected.signing.key.alias" => ENV["RELEASE_KEYSTORE_ALIAS"],
+         "android.injected.signing.key.password" => ENV["RELEASE_KEYSTORE_PASSWORD"],
          "vname" => package["version"]
         },
         project_dir: './android'

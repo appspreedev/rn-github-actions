@@ -79,7 +79,6 @@ jobs:
         run: sh ./.github/scripts/decrypt_android_keys.sh
         env:
           RELEASE_KEYSTORE: ${{ secrets.RELEASE_KEYSTORE }}
-          RELEASE_KEYSTORE_INFO: ${{ secrets.RELEASE_KEYSTORE_INFO }}
           SECRETS_PASSPHRASE: ${{ secrets.SECRETS_PASSPHRASE }}
 #          SERVICE_ACCOUNT: ${{ secrets.SERVICE_ACCOUNT }}
 
@@ -118,3 +117,6 @@ jobs:
 
       - name: Build & Deploy
         run: bundle exec fastlane android pre_release
+        env:
+          RELEASE_KEYSTORE_ALIAS: ${{secrets.RELEASE_KEYSTORE_ALIAS}}
+          RELEASE_KEYSTORE_PASSWORD: ${{secrets.RELEASE_KEYSTORE_PASSWORD}}
