@@ -15,7 +15,7 @@ jobs:
 
       - uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '2.7.0'
+          ruby-version: '2.7.4'
           bundler-cache: true
 
       - name: Node modules cache
@@ -42,8 +42,12 @@ jobs:
 
       - name: Fastlane
         run: bundle exec fastlane ios build
+        env:
+          FASTLANE_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
 
   ANDROID_BUILD:
+    name: "Android Build & Deploy"
     runs-on: ubuntu-latest
 
     steps:
